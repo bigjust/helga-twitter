@@ -20,11 +20,14 @@ setup(name="helga-twitter",
       license='GPLv3',
       packages=find_packages(),
       include_package_data=True,
-      py_modules=['helga-twitter'],
+      py_modules=['helga_twitter'],
       zip_safe=True,
       entry_points = dict(
           helga_plugins = [
               'twitter = helga_twitter:twitter',
           ],
+      ),
+      install_requires = (
+          'tweepy'
       ),
 )
