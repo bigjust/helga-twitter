@@ -33,6 +33,7 @@ class HelgaStreamListener(tweepy.StreamListener):
 class TwitterPlugin(Command):
 
     command = 'twitter'
+    help = 'Be Social. Usage: twitter [tweet|follow] <status>|<screen_name>'
 
     def run(self, client, channel, nick, message, cmd, args):
 
