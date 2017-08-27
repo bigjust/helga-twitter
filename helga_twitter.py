@@ -50,6 +50,19 @@ class TwitterPlugin(Command):
                     status.id,
                 )
 
+            if subcmd == 'follow':
+
+                if len(args) < 2:
+                    return 'usage: twitter follow <username>'
+
+                username = args[1]
+                api.create_friendship(
+                    screen_name=username,
+                    follow=True
+                )
+
+                return 'Done!'
+
 
 @smokesignal.on('join')
 def init_twitter_stream(client, channel):
