@@ -5,7 +5,7 @@ version = '0.1.0'
 setup(name="helga-twitter",
       version=version,
       description=('twitter via irc'),
-      classifiers=['Development Status :: 1 - Beta',
+      classifiers=['Development Status :: 1 - Planning',
                    'Environment :: IRC',
                    'Intended Audience :: Twisted Developers, IRC Bot Developers',
                    'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
