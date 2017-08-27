@@ -55,6 +55,10 @@ class HelgaStreamListener(tweepy.StreamListener):
         super(HelgaStreamListener, self).__init__(*args, **kwargs)
 
     def on_status(self, status):
+
+        if status.text.startswith('RT'):
+            return
+
         self.client.msg(self.channel, u'@{}: {}'.format(
             status.user.screen_name,
             status.text
