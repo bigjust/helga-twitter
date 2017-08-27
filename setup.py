@@ -24,10 +24,10 @@ setup(name="helga-twitter",
       zip_safe=True,
       entry_points = dict(
           helga_plugins = [
-              'twitter = helga_twitter:twitter',
+              'twitter = helga_twitter:TwitterPlugin',
           ],
       ),
       install_requires = (
-          'tweepy'
+          'tweepy==3.5.0'
       ),
 )
