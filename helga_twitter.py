@@ -14,6 +14,25 @@ ACCESS_TOKEN_SECRET = getattr(settings, 'TWITTER_ACCESS_SECRET')
 logger = log.getLogger(__name__)
 
 
+def get_client():
+
+    auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+    auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+    api = tweepy.API(auth)
+
+    return api
+
+def tweet(status):
+
+    twitter = get_client()
+    status_obj = twitter.update_status(status)
+
+    return 'https://twitter.com/{}/status/{}'.format(
+        status_obj.author.screen_name,
+        status_obj.id,
+    )
+
+
 class HelgaStreamListener(tweepy.StreamListener):
 
     def __init__(self, *args, **kwargs):
@@ -38,9 +57,8 @@ class TwitterPlugin(Command):
     def run(self, client, channel, nick, message, cmd, args):
 
         if args and args[0] in ['tweet', 'follow']:
-            auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-            auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
-            api = tweepy.API(auth)
+
+            twitter = get_client()
 
             subcmd = args[0]
 
@@ -49,11 +67,7 @@ class TwitterPlugin(Command):
                 if len(args) < 2:
                     return 'usage: twitter tweet <text...>'
 
-                status = api.update_status(' '.join(args[1:]))
-                return 'https://twitter.com/{}/status/{}'.format(
-                    status.author.screen_name,
-                    status.id,
-                )
+                return tweet(' '.join(args[1:]))
 
             if subcmd == 'follow':
 
@@ -61,7 +75,7 @@ class TwitterPlugin(Command):
                     return 'usage: twitter follow <username>'
 
                 username = args[1]
-                api.create_friendship(
+                twitter.create_friendship(
                     screen_name=username,
                     follow=True
                 )
@@ -72,12 +86,10 @@ class TwitterPlugin(Command):
 @smokesignal.on('join')
 def init_twitter_stream(client, channel):
 
-    auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-    auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
-    api = tweepy.API(auth)
+    twitter = get_client()
 
     myStream = tweepy.Stream(
-        auth = api.auth,
+        auth = twitter.auth,
         listener = HelgaStreamListener(
             client=client,
             channel=channel
@@ -85,3 +97,5 @@ def init_twitter_stream(client, channel):
     )
 
     myStream.userstream(async=True)
+
+    logger.debug('twitter stream listener initialized.')

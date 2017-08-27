@@ -1,15 +1,16 @@
 from setuptools import setup, find_packages
 
-version = '0.1.1'
+version = '0.2.0'
 
 setup(name="helga-twitter",
       version=version,
       description=('twitter via irc'),
-      classifiers=['Development Status :: 1 - Planning',
-                   'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
-                   'Operating System :: OS Independent',
-                   'Programming Language :: Python',
-                   'Topic :: Software Development :: Libraries :: Python Modules',
+      classifiers=[
+          'Development Status :: 4 - Beta',
+          'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+          'Operating System :: OS Independent',
+          'Programming Language :: Python',
+          'Topic :: Software Development :: Libraries :: Python Modules',
       ],
       keywords='helga twitter',
       author='Justin Caratzas',
