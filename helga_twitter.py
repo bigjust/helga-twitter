@@ -1,10 +1,11 @@
+import json
 import smokesignal
 import tweepy
 
 from twisted.internet import reactor
 
 from helga import settings, log
-from helga.plugins import Command
+from helga.plugins import Command, ResponseNotReady
 
 CONSUMER_KEY = getattr(settings, 'TWITTER_CONSUMER_KEY')
 CONSUMER_SECRET = getattr(settings, 'TWITTER_CONSUMER_SECRET')
@@ -22,14 +23,25 @@ def get_client():
 
     return api
 
-def tweet(status):
+def tweet(client, channel, status):
 
     twitter = get_client()
-    status_obj = twitter.update_status(status)
 
-    return 'https://twitter.com/{}/status/{}'.format(
-        status_obj.author.screen_name,
-        status_obj.id,
+    try:
+        status_obj = twitter.update_status(status)
+    except tweepy.error.TweepError as error:
+        client.msg(
+            channel,
+            u'error: {}'.format(str(error))
+        )
+        return
+
+    client.msg(
+        channel,
+        'https://twitter.com/{}/status/{}'.format(
+            status_obj.author.screen_name,
+            status_obj.id,
+        ),
     )
 
 
@@ -59,7 +71,6 @@ class TwitterPlugin(Command):
         if args and args[0] in ['tweet', 'follow']:
 
             twitter = get_client()
-
             subcmd = args[0]
 
             if subcmd == 'tweet':
@@ -67,7 +78,9 @@ class TwitterPlugin(Command):
                 if len(args) < 2:
                     return 'usage: twitter tweet <text...>'
 
-                return tweet(' '.join(args[1:]))
+                reactor.callLater(0, tweet, client, channel, ' '.join(args[1:]))
+
+                raise ResponseNotReady
 
             if subcmd == 'follow':
 
