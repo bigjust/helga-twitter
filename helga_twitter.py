@@ -44,6 +44,10 @@ class TwitterPlugin(Command):
             subcmd = args[0]
 
             if subcmd == 'tweet':
+
+                if len(args) < 2:
+                    return 'usage: twitter tweet <text...>'
+
                 status = api.update_status(' '.join(args[1:]))
                 return 'https://twitter.com/{}/status/{}'.format(
                     status.author.screen_name,
