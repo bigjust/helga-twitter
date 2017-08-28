@@ -68,7 +68,7 @@ class HelgaStreamListener(tweepy.StreamListener):
 class TwitterPlugin(Command):
 
     command = 'twitter'
-    help = 'Be Social. Usage: twitter [tweet|follow] <status>|<screen_name>'
+    help = 'Be Social. Usage: twitter [tweet|follow|unfollow] <status>|<screen_name>'
 
     def run(self, client, channel, nick, message, cmd, args):
 
@@ -99,6 +99,16 @@ class TwitterPlugin(Command):
 
                 return 'Done!'
 
+            if subcmd == 'unfollow':
+
+                if len(args) < 2:
+                    return 'usage: twitter unfollow <username>'
+
+                twitter.destroy_friendship(
+                    screen_name=args[1],
+                )
+
+                return 'Done!'
 
 @smokesignal.on('join')
 def init_twitter_stream(client, channel):
