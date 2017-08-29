@@ -27,6 +27,6 @@ setup(name="helga-twitter",
           ],
       ),
       install_requires = (
-          'tweepy==3.5.0'
+          'tweepy'
       ),
 )
