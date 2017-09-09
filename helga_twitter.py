@@ -7,10 +7,10 @@ from twisted.internet import reactor
 from helga import settings, log
 from helga.plugins import Command, ResponseNotReady
 
-CONSUMER_KEY = getattr(settings, 'TWITTER_CONSUMER_KEY')
-CONSUMER_SECRET = getattr(settings, 'TWITTER_CONSUMER_SECRET')
-ACCESS_TOKEN = getattr(settings, 'TWITTER_ACCESS_TOKEN')
-ACCESS_TOKEN_SECRET = getattr(settings, 'TWITTER_ACCESS_SECRET')
+CONSUMER_KEY = getattr(settings, 'TWITTER_CONSUMER_KEY', False)
+CONSUMER_SECRET = getattr(settings, 'TWITTER_CONSUMER_SECRET', False)
+ACCESS_TOKEN = getattr(settings, 'TWITTER_ACCESS_TOKEN', False)
+ACCESS_TOKEN_SECRET = getattr(settings, 'TWITTER_ACCESS_SECRET', False)
 
 logger = log.getLogger(__name__)
 
@@ -112,6 +112,17 @@ class TwitterPlugin(Command):
 
 @smokesignal.on('join')
 def init_twitter_stream(client, channel):
+
+    required_settings = [
+        CONSUMER_KEY,
+        CONSUMER_SECRET,
+        ACCESS_TOKEN,
+        ACCESS_TOKEN_SECRET
+    ]
+
+    if not all(required_settings):
+        logger.info('missing or more of required Twitter authentication settings. Please see README.')
+        return
 
     twitter = get_client()
 
