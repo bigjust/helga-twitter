@@ -72,7 +72,7 @@ class TwitterPlugin(Command):
 
     def run(self, client, channel, nick, message, cmd, args):
 
-        if args and args[0] in ['tweet', 'follow']:
+        if args:
 
             twitter = get_client()
             subcmd = args[0]
