@@ -30,10 +30,8 @@ def tweet(client, channel, status):
     try:
         status_obj = twitter.update_status(status)
     except tweepy.error.TweepError as error:
-        client.msg(
-            channel,
-            u'error: {}'.format(str(error))
-        )
+        logger.error('received error from Tweepy when updating: {}'.format(str(error)))
+        client.msg(channel, 'Error when attemping to update twitter status')
         return
 
     client.msg(
