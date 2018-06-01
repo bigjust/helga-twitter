@@ -54,6 +54,9 @@ class HelgaStreamListener(tweepy.StreamListener):
 
     def on_status(self, status):
 
+        if status.user.screen_name == self.api.me().screen_name:
+            return
+
         if status.text.startswith('RT'):
             return
 
