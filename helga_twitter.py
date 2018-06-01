@@ -62,6 +62,18 @@ class HelgaStreamListener(tweepy.StreamListener):
             status.text
         ))
 
+    def on_error(self, status_code):
+
+        logger.error('received error from Tweepy Stream Listener: {}'.format(status_code))
+
+        if status_code == 420:
+            #returning False in on_error disconnects the stream
+            return False
+
+        # returning non-False reconnects the stream, with backoff.
+        return True
+
+
 
 class TwitterPlugin(Command):
 
