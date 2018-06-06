@@ -54,7 +54,11 @@ class HelgaStreamListener(tweepy.StreamListener):
 
     def on_status(self, status):
 
-        if status.user.screen_name == self.api.me().screen_name:
+        auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+        auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+
+        if status.user.screen_name == auth.get_username():
+            # its our tweet, pass
             return
 
         if status.text.startswith('RT'):
