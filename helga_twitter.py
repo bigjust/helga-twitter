@@ -57,6 +57,11 @@ class HelgaStreamListener(tweepy.StreamListener):
         auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
         auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 
+        try:
+            status_text = status.extended_tweet['full_text']
+        except AttributeError:
+            status_text = status.text
+
         if status.user.screen_name == auth.get_username():
             # its our tweet, pass
             return
@@ -66,7 +71,7 @@ class HelgaStreamListener(tweepy.StreamListener):
 
         self.client.msg(self.channel, u'@{}: {}'.format(
             status.user.screen_name,
-            status.text
+            status_text,
         ))
 
     def on_error(self, status_code):
